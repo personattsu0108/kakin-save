@@ -219,19 +219,18 @@ function playSaveSound(){
 
     setTimeout(()=>c.remove(),1600);
   }
- function setData(){
+
+  function customSave(){
+ let n=+document.getElementById("amount").value;
+ if(n>0){save(n);document.getElementById("amount").value=""}
+}
+function setData(){
   let n=+document.getElementById("editTotal").value;
   if(n>=0){
     total=n;
     update();
   }
- }
-
-  navigator.vibrate?.([100,50,function customSave(){
- let n=+document.getElementById("amount").value;
- if(n>0){save(n);document.getElementById("amount").value=""}
 }
-
 update();
 </script>
 </body>
