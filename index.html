@@ -1,181 +1,94 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#111827">
 <title>課金封印SAVE</title>
-
 <style>
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif;
-  background:linear-gradient(135deg,#111827,#1e293b);
-  color:white;
-  min-height:100vh;
-  text-align:center;
-}
-.container{
-  max-width:520px;
-  margin:auto;
-  padding:25px 16px 40px;
-}
-h1{
-  font-size:32px;
-  margin:10px 0 5px;
-}
-.subtitle{
-  color:#cbd5e1;
-  margin-bottom:22px;
-}
-.card{
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:22px;
-  padding:22px;
-  margin-bottom:18px;
-  box-shadow:0 10px 30px rgba(0,0,0,.25);
-}
-.total{
-  font-size:48px;
-  font-weight:900;
-  margin:8px 0;
-}
-.label{
-  color:#cbd5e1;
-}
-.progress{
-  height:16px;
-  background:#334155;
-  border-radius:99px;
-  overflow:hidden;
-  margin-top:15px;
-}
-.bar{
-  height:100%;
-  width:0%;
-  background:linear-gradient(90deg,#facc15,#fb923c,#f43f5e);
-  transition:.5s;
-}
-.level{
-  margin-top:12px;
-  font-weight:bold;
-  color:#fde047;
-}
-.buttons{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:12px;
-}
-button{
-  border:0;
-  border-radius:18px;
-  padding:18px 8px;
-  font-size:20px;
-  font-weight:900;
-  color:white;
-  background:linear-gradient(135deg,#7c3aed,#db2777);
-  box-shadow:0 7px 0 #4c1d95;
-  cursor:pointer;
-  touch-action:manipulation;
-}
-button:active{
-  transform:translateY(6px);
-  box-shadow:0 1px 0 #4c1d95;
-}
-.custom{
-  display:flex;
-  gap:8px;
-  margin-top:14px;
-}
-input{
-  flex:1;
-  min-width:0;
-  border:0;
-  border-radius:15px;
-  padding:15px;
-  font-size:18px;
-}
-.custom button{
-  flex:0 0 100px;
-  padding:10px;
-  font-size:16px;
-}
-.stats{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
-.stat{
-  background:rgba(255,255,255,.06);
-  border-radius:15px;
-  padding:13px;
-}
-.stat b{
-  display:block;
-  font-size:22px;
-}
-.reset{
-  background:#475569;
-  box-shadow:0 5px 0 #1e293b;
-  font-size:14px;
-  padding:12px;
-  margin-top:15px;
-}
-#effect{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  opacity:0;
-  z-index:10;
-}
-.effectText{
-  font-size:42px;
-  font-weight:1000;
-  color:#fde047;
-  text-shadow:
-    0 0 10px #fff,
-    0 0 25px #f97316,
-    0 0 50px #ec4899;
-  transform:scale(.3) rotate(-8deg);
-}
-.show{
-  animation:perfect .9s ease-out;
-}
-@keyframes perfect{
-  0%{opacity:0;transform:scale(.3)}
-  20%{opacity:1}
-  55%{transform:scale(1.3) rotate(4deg)}
-  100%{opacity:0;transform:scale(1)}
-}
-.coin{
-  position:fixed;
-  font-size:28px;
-  pointer-events:none;
-  animation:fall 1.2s ease-out forwards;
-  z-index:9;
-}
-@keyframes fall{
-  0%{transform:translateY(0) scale(.5);opacity:1}
-  100%{transform:translateY(350px) rotate(720deg) scale(1.3);opacity:0}
-}
+body{margin:0;background:#111827;color:white;font-family:system-ui;text-align:center}
+main{max-width:500px;margin:auto;padding:25px 15px}
+h1{font-size:32px}
+.card{background:#1f2937;border-radius:20px;padding:20px;margin:15px 0}
+.total{font-size:48px;font-weight:bold}
+.bar{height:15px;background:#374151;border-radius:20px;margin:15px 0;overflow:hidden}
+#bar{height:100%;width:0;background:#facc15;transition:.5s}
+.buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+button{border:0;border-radius:15px;padding:18px;font-size:20px;font-weight:bold;color:white;background:#7c3aed}
+button:active{transform:scale(.95)}
+input{padding:15px;border-radius:12px;border:0;font-size:18px;width:55%;margin-top:12px}
+.custom{background:#db2777;margin-top:10px}
+#effect{position:fixed;inset:0;display:none;align-items:center;justify-content:center;font-size:40px;font-weight:bold;color:#fde047;text-shadow:0 0 20px #f97316;pointer-events:none}
 </style>
 </head>
-
 <body>
-
-<div class="container">
-
+<main>
 <h1>💰 課金封印SAVE</h1>
-<div class="subtitle">課金したつもりで、未来の自分に貯金。</div>
+<p>課金したつもりで、未来の自分に貯金。</p>
 
 <div class="card">
-  <div class="label">現在の貯金額</div>
-  <div class="total" id="total">¥0</div>
+<p>現在の貯金額</p>
+<div class="total" id="total">¥0</div>
+<div class="bar"><div id="bar"></div></div>
+<div id="level">Lv.1 貯金ビギナー</div>
+</div>
 
-  <div class="progress">
-    <
+<div class="card">
+<p>💥 課金したくなった金額をSAVE！</p>
+<div class="buttons">
+<button onclick="save(500)">+¥500</button>
+<button onclick="save(1000)">+¥1,000</button>
+<button onclick="save(2000)">+¥2,000</button>
+<button onclick="save(3000)">+¥3,000</button>
+<button onclick="save(5000)">+¥5,000</button>
+<button onclick="save(10000)">+¥10,000</button>
+</div>
+<input id="amount" type="number" placeholder="好きな金額">
+<button class="custom" onclick="customSave()">SAVE</button>
+</div>
+
+<div class="card">
+<p>今日のSAVE：<b id="today">¥0</b></p>
+<p>SAVE回数：<b id="count">0回</b></p>
+</div>
+</main>
+
+<div id="effect">PERFECT SAVE!!</div>
+
+<script>
+let total=+localStorage.total||0;
+let today=+localStorage.today||0;
+let count=+localStorage.count||0;
+
+function update(){
+ document.getElementById("total").textContent="¥"+total.toLocaleString();
+ document.getElementById("today").textContent="¥"+today.toLocaleString();
+ document.getElementById("count").textContent=count+"回";
+ document.getElementById("bar").style.width=Math.min(total/10000,100)+"%";
+ let l=total>=1000000?"🏆 Lv.MAX 100万円達成！！":total>=500000?"🔥 Lv.5 貯金マスター":total>=300000?"⚡ Lv.4 貯金戦士":total>=100000?"💪 Lv.3 貯金ファイター":total>=50000?"✨ Lv.2 貯金ルーキー":"Lv.1 貯金ビギナー";
+ document.getElementById("level").textContent=l;
+ localStorage.total=total;
+ localStorage.today=today;
+ localStorage.count=count;
+}
+
+function save(n){
+ total+=n;
+ today+=n;
+ count++;
+ update();
+ let e=document.getElementById("effect");
+ e.style.display="flex";
+ navigator.vibrate?.([80,50,120]);
+ setTimeout(()=>e.style.display="none",800);
+}
+
+function customSave(){
+ let n=+document.getElementById("amount").value;
+ if(n>0){save(n);document.getElementById("amount").value=""}
+}
+
+update();
+</script>
+</body>
+</html>
