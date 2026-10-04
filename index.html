@@ -45,7 +45,10 @@ input{padding:15px;border-radius:12px;border:0;font-size:18px;width:55%;margin-t
 </div>
 <input id="amount" type="number" placeholder="好きな金額">
 <button class="custom" onclick="customSave()">SAVE</button>
-</div>
+<div style="margin-top:15px;">
+<input id="editTotal" type="number" placeholder="金額を手動入力">
+<button onclick="setData()">💰 金額を変更</button>
+</div></div>
 
 <div class="card">
 <p>今日のSAVE：<b id="today">¥0</b></p>
@@ -216,6 +219,13 @@ function playSaveSound(){
 
     setTimeout(()=>c.remove(),1600);
   }
+ function setData(){
+  let n=+document.getElementById("editTotal").value;
+  if(n>=0){
+    total=n;
+    update();
+  }
+ }
 
   navigator.vibrate?.([100,50,function customSave(){
  let n=+document.getElementById("amount").value;
