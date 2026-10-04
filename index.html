@@ -107,25 +107,7 @@ function update(){
   setTimeout(()=>e.style.display="none",1000);
 }
 
-function playSaveSound(){
-  try{
-    let A=window.AudioContext||window.webkitAudioContext;
-    let ctx=new A();
-    [523,659,784,1047].forEach((f,i)=>{
-      let o=ctx.createOscillator();
-      let g=ctx.createGain();
-      o.frequency.value=f;
-      o.type="sine";
-      g.gain.setValueAtTime(.001,ctx.currentTime+i*.08);
-      g.gain.exponentialRampToValueAtTime(.25,ctx.currentTime+i*.08+.02);
-      g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+i*.08+.3);
-      o.connect(g);
-      g.connect(ctx.destination);
-      o.start(ctx.currentTime+i*.08);
-      o.stop(ctx.currentTime+i*.08+.3);
-    });
-  }catch(e){}
-}
+
 
 function playSaveSound(){
   try{
