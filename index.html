@@ -64,7 +64,7 @@ function update(){
  document.getElementById("total").textContent="¥"+total.toLocaleString();
  document.getElementById("today").textContent="¥"+today.toLocaleString();
  document.getElementById("count").textContent=count+"回";
- document.getElementById("bar").style.width=Math.min(total/10000,100)+"%";
+ document.getElementById("bar").style.width=Math.min(total/1000000,100)+"%";
  let l=total>=1000000?"🏆 Lv.MAX 100万円達成！！":total>=500000?"🔥 Lv.5 貯金マスター":total>=300000?"⚡ Lv.4 貯金戦士":total>=100000?"💪 Lv.3 貯金ファイター":total>=50000?"✨ Lv.2 貯金ルーキー":"Lv.1 貯金ビギナー";
  document.getElementById("level").textContent=l;
  localStorage.total=total;
@@ -77,7 +77,14 @@ function update(){
   today+=n;
   count++;
   update();
+  
+let oldTotal=total-n;
+let oldStep=Math.floor(oldTotal/50000);
+let newStep=Math.floor(total/50000);
 
+if(newStep>oldStep){
+  milestoneSound(total);
+}
   let e=document.getElementById("effect");
   e.innerHTML="💥 PERFECT SAVE!!<br><small>+¥"+n.toLocaleString()+" SAVE!</small>";
   e.style.display="flex";
@@ -142,7 +149,75 @@ function playSaveSound(){
 
     setTimeout(()=>ctx.close(),1000);
   }catch(e){}
-}function customSave(){
+}function milestoneSound(total){
+  const effect=document.getElementById("effect");
+
+  let text="🎉 MILESTONE!!";
+  let notes=[523,659,784,1047];
+
+  if(total>=1000000){
+    text="👑 100万円達成！！";
+    notes=[523,659,784,1047,1319,1568];
+  }else if(total>=500000){
+    text="🏆 50万円達成！！";
+    notes=[659,784,988,1319,1568];
+  }else if(total>=300000){
+    text="⚡ 30万円達成！！";
+    notes=[587,740,880,1175];
+  }else if(total>=100000){
+    text="🔥 10万円達成！！";
+    notes=[523,659,784,1047,1319];
+  }
+
+  effect.innerHTML=text+"<br><small>🎊 5万円突破！ 🎊</small>";
+  effect.style.display="flex";
+  effect.style.fontSize="42px";
+
+  try{
+    const A=window.AudioContext||window.webkitAudioContext;
+    const ctx=new A();
+
+    notes.forEach((freq,i)=>{
+      const o=ctx.createOscillator();
+      const g=ctx.createGain();
+
+      o.type="square";
+      o.frequency.value=freq;
+
+      g.gain.setValueAtTime(.001,ctx.currentTime+i*.12);
+      g.gain.exponentialRampToValueAtTime(.3,ctx.currentTime+i*.12+.02);
+      g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+i*.12+.25);
+
+      o.connect(g);
+      g.connect(ctx.destination);
+
+      o.start(ctx.currentTime+i*.12);
+      o.stop(ctx.currentTime+i*.12+.27);
+    });
+
+    setTimeout(()=>ctx.close(),1500);
+  }catch(e){}
+
+  for(let i=0;i<40;i++){
+    let c=document.createElement("div");
+    c.textContent=["🎉","✨","🪙","⭐","💰"][Math.floor(Math.random()*5)];
+    c.style.position="fixed";
+    c.style.left=(5+Math.random()*90)+"%";
+    c.style.top=(15+Math.random()*25)+"%";
+    c.style.fontSize=(25+Math.random()*35)+"px";
+    c.style.zIndex="999";
+    c.style.transition="1.5s";
+    document.body.appendChild(c);
+
+    setTimeout(()=>{
+      c.style.transform="translateY(500px) rotate(1080deg)";
+      c.style.opacity="0";
+    },30);
+
+    setTimeout(()=>c.remove(),1600);
+  }
+
+  navigator.vibrate?.([100,50,function customSave(){
  let n=+document.getElementById("amount").value;
  if(n>0){save(n);document.getElementById("amount").value=""}
 }
