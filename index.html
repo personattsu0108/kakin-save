@@ -72,15 +72,59 @@ function update(){
  localStorage.count=count;
 }
 
-function save(n){
- total+=n;
- today+=n;
- count++;
- update();
- let e=document.getElementById("effect");
- e.style.display="flex";
- navigator.vibrate?.([80,50,120]);
- setTimeout(()=>e.style.display="none",800);
+ function save(n){
+  total+=n;
+  today+=n;
+  count++;
+  update();
+
+  let e=document.getElementById("effect");
+  e.innerHTML="💥 PERFECT SAVE!!<br><small>+¥"+n.toLocaleString()+" SAVE!</small>";
+  e.style.display="flex";
+  navigator.vibrate?.([80,40,120,40,180]);
+
+  for(let i=0;i<20;i++){
+    let c=document.createElement("div");
+    c.textContent=["🪙","💰","✨","⭐"][Math.floor(Math.random()*4)];
+    c.style.position="fixed";
+    c.style.left=(10+Math.random()*80)+"%";
+    c.style.top=(20+Math.random()*20)+"%";
+    c.style.fontSize=(25+Math.random()*25)+"px";
+    c.style.zIndex="999";
+    c.style.transition="1s";
+    document.body.appendChild(c);
+
+    setTimeout(()=>{
+      c.style.transform="translateY(350px) rotate(720deg)";
+      c.style.opacity="0";
+    },30);
+
+    setTimeout(()=>c.remove(),1100);
+  }
+
+  playSaveSound();
+
+  setTimeout(()=>e.style.display="none",1000);
+}
+
+function playSaveSound(){
+  try{
+    let A=window.AudioContext||window.webkitAudioContext;
+    let ctx=new A();
+    [523,659,784,1047].forEach((f,i)=>{
+      let o=ctx.createOscillator();
+      let g=ctx.createGain();
+      o.frequency.value=f;
+      o.type="sine";
+      g.gain.setValueAtTime(.001,ctx.currentTime+i*.08);
+      g.gain.exponentialRampToValueAtTime(.25,ctx.currentTime+i*.08+.02);
+      g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+i*.08+.3);
+      o.connect(g);
+      g.connect(ctx.destination);
+      o.start(ctx.currentTime+i*.08);
+      o.stop(ctx.currentTime+i*.08+.3);
+    });
+  }catch(e){}
 }
 
 function customSave(){
