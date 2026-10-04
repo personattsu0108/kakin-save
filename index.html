@@ -127,7 +127,40 @@ function playSaveSound(){
   }catch(e){}
 }
 
-function customSave(){
+function playSaveSound(){
+  try{
+    const A=window.AudioContext||window.webkitAudioContext;
+    const ctx=new A();
+
+    const notes=[
+      [392,0],
+      [523,0.08],
+      [659,0.16],
+      [784,0.24],
+      [1047,0.34]
+    ];
+
+    notes.forEach(([freq,time])=>{
+      const o=ctx.createOscillator();
+      const g=ctx.createGain();
+
+      o.type="square";
+      o.frequency.value=freq;
+
+      g.gain.setValueAtTime(0.001,ctx.currentTime+time);
+      g.gain.exponentialRampToValueAtTime(0.18,ctx.currentTime+time+0.015);
+      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+time+0.16);
+
+      o.connect(g);
+      g.connect(ctx.destination);
+
+      o.start(ctx.currentTime+time);
+      o.stop(ctx.currentTime+time+0.18);
+    });
+
+    setTimeout(()=>ctx.close(),1000);
+  }catch(e){}
+}function customSave(){
  let n=+document.getElementById("amount").value;
  if(n>0){save(n);document.getElementById("amount").value=""}
 }
